@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduConnect - Login</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+  <main class="login-container">
+    <section class="login-box">
+      <div class="logo-area">
+        <img src="assets/logo - tema escuro.png" alt="Logo da EduConnect">
+        <h1>EduConnect</h1>
+      </div>
+
+      <form class="login-form" id="loginForm">
+        <label for="user">Usuário</label>
+        <input type="text" id="user" placeholder="Digite seu usuário">
+
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="Digite sua senha">
+
+        <button type="submit">Entrar</button>
+        <p id="errorMsg" class="error"></p>
+      </form>
+
+      <div class="theme-toggle">
+        <span id="themeText">☀️ Modo Claro</span>
+        <label class="switch">
+          <input type="checkbox" id="themeSwitch">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
