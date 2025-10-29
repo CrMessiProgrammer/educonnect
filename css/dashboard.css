@@ -1,0 +1,109 @@
+/* Estilos específicos do dashboard */
+
+/* Layout principal */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Sidebar (menu lateral) */
+.sidebar {
+    width: 240px;
+    background-color: var(--box-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+    border-right: 1px solid var(--border-color);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.logo img {
+    width: 50px;
+}
+
+.logo h2 {
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+}
+
+/* Menu */
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav li {
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sidebar nav li:hover,
+.sidebar nav li.active {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Botão de logout */
+.logout {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.logout:hover {
+    opacity: 0.9;
+}
+
+/* Área principal */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header superior */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--box-color);
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Conteúdo */
+.content-area {
+    flex: 1;
+    padding: 1.5rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 70px;
+    }
+
+    .sidebar h2 {
+        display: none;
+    }
+
+    .sidebar nav li {
+        text-align: center;
+        font-size: 0.8rem;
+    }
+}
