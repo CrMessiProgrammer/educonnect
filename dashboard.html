@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduConnect - Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Menu lateral -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="assets/logo - tema escuro.png" alt="Logo EduConnect">
+        <h2>EduConnect</h2>
+      </div>
+      <nav>
+        <ul>
+          <li class="active" data-section="alunos">Alunos</li>
+          <li data-section="professores">Professores</li>
+          <li data-section="calendario">Calendário</li>
+          <li data-section="relatorios">Relatórios</li>
+        </ul>
+      </nav>
+      <button id="logoutBtn" class="logout">Sair</button>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="user-info">
+          <span id="userName">Olá, usuário!</span>
+        </div>
+        <div class="theme-toggle">
+          <span id="themeText">Modo Claro</span>
+          <label class="switch">
+            <input type="checkbox" id="themeSwitch">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </header>
+
+      <!-- Área dinâmica -->
+      <section id="contentArea" class="content-area">
+        <h2>Bem-vindo ao Painel</h2>
+        <p>Selecione uma das seções no menu para começar.</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
