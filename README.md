@@ -23,5 +23,5 @@ O objetivo é criar a interface inicial do sistema de gestão escolar **EduConne
 2. Abra o arquivo index.html no navegador.
 
 ## 👨‍💻 Autor
-Desenvolvido por Carlos Henrique Nunes
+Desenvolvido por Carlos Henrique Nunes<br>
 Programa Trainee Digital – TIVIT
