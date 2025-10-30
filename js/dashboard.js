@@ -24,17 +24,11 @@ function atualizarConteudo(secao) {
         case "professores":
             renderFormularioETabela("professores");
             break;
-        case "calendario":
-            contentArea.innerHTML = `
-                <h2>Calendário Escolar</h2>
-                <p>Visualize eventos e atividades programadas.</p>
-            `;
-            break;
         case "relatorios":
-            contentArea.innerHTML = `
-                <h2>Relatórios</h2>
-                <p>Gráficos e desempenho geral dos alunos.</p>
-            `;
+            renderGraficoDesempenho();
+            break;
+        case "calendario":
+            renderCalendario();
             break;
         default:
             contentArea.innerHTML = `
