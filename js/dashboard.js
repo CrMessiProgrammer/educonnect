@@ -19,31 +19,25 @@ menuItems.forEach(item => {
 function atualizarConteudo(secao) {
     switch (secao) {
         case "alunos":
-        contentArea.innerHTML = `
-            <h2>Gestão de Alunos</h2>
-            <p>Aqui você poderá cadastrar, listar e editar alunos.</p>
-        `;
-        break;
+            renderFormularioETabela("alunos");
+            break;
         case "professores":
-        contentArea.innerHTML = `
-            <h2>Gestão de Professores</h2>
-            <p>Aqui você poderá cadastrar e listar professores.</p>
-        `;
-        break;
+            renderFormularioETabela("professores");
+            break;
         case "calendario":
-        contentArea.innerHTML = `
-            <h2>Calendário Escolar</h2>
-            <p>Visualize eventos e atividades programadas.</p>
-        `;
-        break;
+            contentArea.innerHTML = `
+                <h2>Calendário Escolar</h2>
+                <p>Visualize eventos e atividades programadas.</p>
+            `;
+            break;
         case "relatorios":
-        contentArea.innerHTML = `
-            <h2>Relatórios</h2>
-            <p>Gráficos e desempenho geral dos alunos.</p>
-        `;
-        break;
+            contentArea.innerHTML = `
+                <h2>Relatórios</h2>
+                <p>Gráficos e desempenho geral dos alunos.</p>
+            `;
+            break;
         default:
-        contentArea.innerHTML = `
+            contentArea.innerHTML = `
             <h2>Bem-vindo ao Painel</h2>
             <p>Selecione uma das seções no menu para começar.</p>
         `;
