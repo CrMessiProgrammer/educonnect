@@ -1,10 +1,10 @@
-// Script da dashboard
+// Controle principal do dashboard
 
 const menuItems = document.querySelectorAll(".sidebar nav li");
 const contentArea = document.getElementById("contentArea");
 const logoutBtn = document.getElementById("logoutBtn");
 
-// Troca de seções ao clicar no menu
+// Alterna entre as seções ao clicar no menu lateral
 menuItems.forEach(item => {
     item.addEventListener("click", () => {
         menuItems.forEach(i => i.classList.remove("active"));
@@ -15,30 +15,30 @@ menuItems.forEach(item => {
     });
 });
 
-// Função para trocar o conteúdo principal
+// Atualiza o conteúdo da área principal conforme a seção clicada
 function atualizarConteudo(secao) {
     switch (secao) {
         case "alunos":
-            renderFormularioETabela("alunos");
-            break;
+        renderFormularioETabela("alunos");
+        break;
         case "professores":
-            renderFormularioETabela("professores");
-            break;
+        renderFormularioETabela("professores");
+        break;
         case "relatorios":
-            renderGraficoDesempenho();
-            break;
+        renderGraficoDesempenho();
+        break;
         case "calendario":
-            renderCalendario();
-            break;
+        renderCalendario();
+        break;
         default:
-            contentArea.innerHTML = `
+        contentArea.innerHTML = `
             <h2>Bem-vindo ao Painel</h2>
             <p>Selecione uma das seções no menu para começar.</p>
         `;
     }
 }
 
-// Botão de logout
+// Logout simples com confirmação
 logoutBtn.addEventListener("click", () => {
     if (confirm("Deseja realmente sair?")) {
         window.location.href = "index.html";
