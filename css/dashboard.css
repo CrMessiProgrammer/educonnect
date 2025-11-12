@@ -1,4 +1,4 @@
-/* Estilos específicos do dashboard */
+/* === Estilos específicos do dashboard === */
 
 /* Layout principal */
 .dashboard-container {
@@ -6,6 +6,7 @@
     height: 100vh;
     background-color: var(--bg-color);
     color: var(--text-color);
+    overflow: hidden;
 }
 
 /* Sidebar (menu lateral) */
@@ -17,6 +18,7 @@
     justify-content: space-between;
     padding: 1rem;
     border-right: 1px solid var(--border-color);
+    transition: width 0.3s ease;
 }
 
 .logo {
@@ -26,17 +28,20 @@
 
 .logo img {
     width: 50px;
+    height: auto;
 }
 
 .logo h2 {
     font-size: 1.3rem;
     margin-top: 0.5rem;
+    color: var(--text-color);
 }
 
 /* Menu */
 .sidebar nav ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .sidebar nav li {
@@ -44,7 +49,7 @@
     margin: 6px 0;
     border-radius: 6px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .sidebar nav li:hover,
@@ -62,11 +67,12 @@
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
-    transition: 0.3s;
+    transition: opacity 0.3s, transform 0.2s;
 }
 
 .logout:hover {
     opacity: 0.9;
+    transform: scale(1.02);
 }
 
 /* Área principal */
@@ -74,6 +80,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 }
 
 /* Header superior */
@@ -84,26 +91,74 @@
     background-color: var(--box-color);
     padding: 0.8rem 1.2rem;
     border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.user-info span {
+    font-weight: 500;
 }
 
 /* Conteúdo */
 .content-area {
     flex: 1;
     padding: 1.5rem;
+    overflow-y: auto;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
+/* === Responsividade === */
+@media (max-width: 900px) {
     .sidebar {
-        width: 70px;
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
     }
 
-    .sidebar h2 {
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo {
         display: none;
     }
 
+    .sidebar nav ul {
+        display: flex;
+        gap: 0.5rem;
+    }
+
     .sidebar nav li {
+        font-size: 0.85rem;
+        padding: 8px;
         text-align: center;
-        font-size: 0.8rem;
+    }
+
+    .logout {
+        display: none;
+    }
+
+    .content-area {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sidebar nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
     }
 }
