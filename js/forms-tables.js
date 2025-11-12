@@ -1,4 +1,4 @@
-// Dados simulados de alunos e professores
+// Dados simulados (por enquanto, apenas mockados)
 const alunos = [
     { nome: "João Silva", turma: "1ºA", email: "joao@educonnect.com" },
     { nome: "Maria Souza", turma: "2ºB", email: "maria@educonnect.com" },
@@ -10,10 +10,9 @@ const professores = [
     { nome: "Carlos Santos", materia: "História", email: "carlos@educonnect.com" },
 ];
 
-// Renderiza o formulário e a tabela com base na seção
+// Renderiza formulário e tabela de alunos ou professores
 function renderFormularioETabela(tipo) {
     const contentArea = document.getElementById("contentArea");
-
     const titulo = tipo === "alunos" ? "Gestão de Alunos" : "Gestão de Professores";
     const labelCampoExtra = tipo === "alunos" ? "Turma" : "Matéria";
 
@@ -53,7 +52,6 @@ function renderFormularioETabela(tipo) {
         </section>
     `;
 
-    // Eventos do formulário e filtro
     document.getElementById("formCadastro").addEventListener("submit", e => {
         e.preventDefault();
         cadastrarItem(tipo);
@@ -64,23 +62,19 @@ function renderFormularioETabela(tipo) {
     });
 }
 
-// Gera linhas da tabela
+// Gera linhas da tabela de acordo com o tipo
 function gerarLinhasTabela(tipo) {
     const lista = tipo === "alunos" ? alunos : professores;
-    return lista
-        .map(
-        item => `
+    return lista.map(item => `
         <tr>
-            <td>${item.nome}</td>
-            <td>${tipo === "alunos" ? item.turma : item.materia}</td>
-            <td>${item.email}</td>
+        <td>${item.nome}</td>
+        <td>${tipo === "alunos" ? item.turma : item.materia}</td>
+        <td>${item.email}</td>
         </tr>
-        `
-        )
-        .join("");
+    `).join("");
 }
 
-// Adiciona novo item
+// Cadastra um novo aluno/professor
 function cadastrarItem(tipo) {
     const nome = document.getElementById("nome").value.trim();
     const campoExtra = document.getElementById("campoExtra").value.trim();
@@ -93,25 +87,20 @@ function cadastrarItem(tipo) {
         return;
     }
 
-    const novoItem =
-        tipo === "alunos"
+    const novoItem = tipo === "alunos"
         ? { nome, turma: campoExtra, email }
         : { nome, materia: campoExtra, email };
 
-    if (tipo === "alunos") alunos.push(novoItem);
-    else professores.push(novoItem);
+    (tipo === "alunos" ? alunos : professores).push(novoItem);
 
     msg.textContent = `${tipo === "alunos" ? "Aluno" : "Professor"} cadastrado com sucesso!`;
     msg.style.color = "#2ecc71";
 
-    // Atualiza tabela
     document.querySelector("#tabela tbody").innerHTML = gerarLinhasTabela(tipo);
-
-    // Limpa campos
     document.getElementById("formCadastro").reset();
 }
 
-// Filtro da tabela
+// Filtro de pesquisa simples por nome
 function filtrarTabela(tipo, valor) {
     const linhas = document.querySelectorAll("#tabela tbody tr");
     linhas.forEach(linha => {

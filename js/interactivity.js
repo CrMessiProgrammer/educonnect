@@ -7,7 +7,7 @@ function criarNotificacao(texto) {
 
   container.appendChild(notif);
 
-  // Remove automaticamente após 3 segundos
+  // Remove a notificação automaticamente após 3 segundos
   setTimeout(() => notif.remove(), 3000);
 }
 
@@ -21,7 +21,6 @@ function criarContainerNotificacoes() {
 // === Gráfico de Desempenho (Chart.js) ===
 function renderGraficoDesempenho() {
   const contentArea = document.getElementById("contentArea");
-
   contentArea.innerHTML = `
     <section class="chart-section">
       <h3>Gráfico de Desempenho</h3>
@@ -49,9 +48,7 @@ function renderGraficoDesempenho() {
     },
     options: {
       responsive: true,
-      scales: {
-        y: { beginAtZero: true }
-      },
+      scales: { y: { beginAtZero: true } },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -66,7 +63,6 @@ function renderGraficoDesempenho() {
 // === Calendário Interativo ===
 function renderCalendario() {
   const contentArea = document.getElementById("contentArea");
-
   contentArea.innerHTML = `
     <section class="calendar-section">
       <div class="calendar-header">
@@ -80,24 +76,24 @@ function renderCalendario() {
 
   const mesAno = document.getElementById("monthYear");
   const grid = document.getElementById("calendarGrid");
-
   let dataAtual = new Date();
 
   function atualizarCalendario() {
     grid.innerHTML = "";
     const ano = dataAtual.getFullYear();
     const mes = dataAtual.getMonth();
+
     mesAno.textContent = dataAtual.toLocaleString("pt-BR", { month: "long", year: "numeric" });
 
     const primeiroDia = new Date(ano, mes, 1).getDay();
     const ultimoDia = new Date(ano, mes + 1, 0).getDate();
 
-    // Espaços antes do primeiro dia
+    // Preenche dias anteriores
     for (let i = 0; i < primeiroDia; i++) {
       grid.appendChild(document.createElement("div"));
     }
 
-    // Dias do mês
+    // Cria os dias do mês
     for (let dia = 1; dia <= ultimoDia; dia++) {
       const div = document.createElement("div");
       div.classList.add("calendar-day");
@@ -112,6 +108,7 @@ function renderCalendario() {
         div.classList.add("today");
       }
 
+      // Ao clicar, cria uma notificação personalizada
       div.addEventListener("click", () => {
         criarNotificacao(`Evento em ${dia} de ${dataAtual.toLocaleString("pt-BR", { month: "long" })}`);
       });
@@ -120,6 +117,7 @@ function renderCalendario() {
     }
   }
 
+  // Navegação entre meses
   document.getElementById("prevMonth").addEventListener("click", () => {
     dataAtual.setMonth(dataAtual.getMonth() - 1);
     atualizarCalendario();
