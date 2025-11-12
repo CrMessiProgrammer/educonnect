@@ -5,7 +5,11 @@
   border-radius: 10px;
   margin-bottom: 2rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.chart-section:hover {
+  transform: translateY(-2px);
 }
 
 .chart-section h3 {
@@ -37,12 +41,12 @@
   letter-spacing: 0.3px;
   animation: slideIn 0.3s ease;
   opacity: 0.95;
+  transition: transform 0.2s, opacity 0.3s;
 }
 
 .notification:hover {
   opacity: 1;
-  transform: scale(1.02);
-  transition: 0.2s;
+  transform: scale(1.03);
 }
 
 @keyframes slideIn {
@@ -57,6 +61,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   transition: background-color 0.3s ease;
+  margin-bottom: 2rem;
 }
 
 .calendar-header {
@@ -64,6 +69,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .calendar-header h3 {
@@ -118,4 +125,20 @@
 .calendar-day:nth-child(7n-6) {
   color: var(--primary-color);
   font-weight: 500;
+}
+
+/* === Responsividade === */
+@media (max-width: 768px) {
+  .chart-section,
+  .calendar-section {
+    padding: 1.2rem;
+  }
+
+  .calendar-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .calendar-day {
+    font-size: 0.8rem;
+  }
 }
