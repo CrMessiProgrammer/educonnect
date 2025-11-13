@@ -1,13 +1,15 @@
 // === Sistema de Notificações ===
-function criarNotificacao(texto) {
+function criarNotificacao(texto, isEvento = false) {
   const container = document.querySelector(".notification-container") || criarContainerNotificacoes();
   const notif = document.createElement("div");
   notif.classList.add("notification");
+
+  if (isEvento) notif.classList.add("notification-evento");
+
   notif.textContent = texto;
 
   container.appendChild(notif);
 
-  // Remove a notificação automaticamente após 3 segundos
   setTimeout(() => notif.remove(), 3000);
 }
 
@@ -64,15 +66,23 @@ function renderGraficoDesempenho() {
 function renderCalendario() {
   const contentArea = document.getElementById("contentArea");
   contentArea.innerHTML = `
-    <section class="calendar-section">
-      <div class="calendar-header">
-        <button id="prevMonth">&lt;</button>
-        <h3 id="monthYear"></h3>
-        <button id="nextMonth">&gt;</button>
-      </div>
-      <div class="calendar-grid" id="calendarGrid"></div>
-    </section>
-  `;
+  <section class="calendar-section">
+    <div class="calendar-header">
+      <button id="prevMonth">&lt;</button>
+      <h3 id="monthYear"></h3>
+      <button id="nextMonth">&gt;</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </section>
+
+  <section class="eventos-section">
+    <h4>Compromissos do Dia</h4>
+    <div id="eventosDoDia" class="eventos-container">
+      <p class="sem-eventos">Selecione uma data para visualizar os compromissos.</p>
+    </div>
+  </section>
+`;
+
 
   const mesAno = document.getElementById("monthYear");
   const grid = document.getElementById("calendarGrid");
@@ -108,9 +118,49 @@ function renderCalendario() {
         div.classList.add("today");
       }
 
-      // Ao clicar, cria uma notificação personalizada
+      // Compromissos simulados do calendário
+      const eventos = {
+        "2025-11-12": ["Prova de Matemática", "Entrega de Trabalho de História"],
+        "2025-11-18": ["Reunião de pais", "Fechamento de notas"],
+        "2025-11-20": ["Simulado de Ciências"],
+      };
+
+      const dataFormatada = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+
+      if (eventos[dataFormatada]) {
+        div.classList.add("has-event");
+      }
+
+      // Adiciona um pontinho visual nos dias com eventos
+      if (eventos[dataFormatada]) {
+        const marcador = document.createElement("span");
+        marcador.classList.add("event-dot");
+        div.appendChild(marcador);
+      }
+
+      // Clique em cada dia do calendário
       div.addEventListener("click", () => {
-        criarNotificacao(`Evento em ${dia} de ${dataAtual.toLocaleString("pt-BR", { month: "long" })}`);
+        // Remove destaque anterior
+        document.querySelectorAll(".calendar-day.selected").forEach(d => d.classList.remove("selected"));
+        div.classList.add("selected");
+
+        const compromissos = eventos[dataFormatada];
+        const containerCompromissos = document.getElementById("eventosDoDia");
+        containerCompromissos.innerHTML = "";
+
+        if (compromissos) {
+          compromissos.forEach(evento => {
+            criarNotificacao(`📅 ${evento}`, true);
+            const card = document.createElement("div");
+            card.classList.add("card-compromisso");
+            card.textContent = evento;
+            containerCompromissos.appendChild(card);
+          });
+        } else {
+          criarNotificacao(`Nenhum compromisso para ${dia} de ${dataAtual.toLocaleString("pt-BR", { month: "long" })}.`);
+          // 👇 Agora não renderiza cards quando não há compromissos
+          containerCompromissos.innerHTML = "";
+        }
       });
 
       grid.appendChild(div);

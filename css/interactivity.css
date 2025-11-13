@@ -62,6 +62,7 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   transition: background-color 0.3s ease;
   margin-bottom: 2rem;
+  min-height: 420px; /* manter o tamanho fixo do calendário */
 }
 
 .calendar-header {
@@ -114,10 +115,34 @@
   color: #fff;
 }
 
+.calendar-day.selected {
+  background-color: rgba(46, 204, 113, 0.15);
+  border: 2px solid #2ecc71;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
 .calendar-day.today {
   background-color: var(--primary-color);
   color: #fff;
   font-weight: bold;
+}
+
+/* Dias que têm eventos marcados */
+.calendar-day.has-event {
+  position: relative;
+}
+
+.calendar-day.has-event::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: #2ecc71;
+  border-radius: 50%;
 }
 
 /* === Diferenciar finais de semana === */
@@ -125,6 +150,45 @@
 .calendar-day:nth-child(7n-6) {
   color: var(--primary-color);
   font-weight: 500;
+}
+
+/* === Compromissos abaixo do calendário === */
+.eventos-section {
+  margin-top: 1.5rem;
+  background-color: var(--box-color);
+  padding: 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.eventos-section h4 {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.eventos-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.card-compromisso {
+  background-color: rgba(46, 204, 113, 0.15);
+  border-left: 4px solid #2ecc71;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.sem-eventos {
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+/* Notificações verdes para eventos */
+.notification-evento {
+  background-color: #2ecc71 !important;
 }
 
 /* === Responsividade === */
