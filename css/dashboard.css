@@ -118,13 +118,16 @@
         flex-direction: column;
     }
 
+    /* Sidebar em formato horizontal */
     .sidebar {
         width: 100%;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: center;
         align-items: center;
         border-right: none;
         border-bottom: 1px solid var(--border-color);
+        padding: 0.8rem 0;
+        gap: 0.8rem;
     }
 
     .logo {
@@ -133,17 +136,55 @@
 
     .sidebar nav ul {
         display: flex;
-        gap: 0.5rem;
+        gap: 0.6rem;
+        margin: 0;
+        padding: 0;
     }
 
     .sidebar nav li {
         font-size: 0.85rem;
-        padding: 8px;
+        padding: 8px 10px;
         text-align: center;
+        border-radius: 6px;
     }
 
+    /* Esconde o botão de logout da sidebar 
+    
     .logout {
         display: none;
+    }
+    
+    */
+
+    /* Mostra o botão de logout dentro da topbar no mobile */
+    .topbar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .topbar .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .topbar .logout-mobile {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: #fff;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: 0.3s;
+    }
+
+    .topbar .logout-mobile:hover {
+        opacity: 0.9;
     }
 
     .content-area {
