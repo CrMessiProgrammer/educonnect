@@ -1,18 +1,19 @@
-/* === Variáveis do tema === */
 :root {
   --bg-color: #f5f6fa;
   --box-color: #ffffff;
   --text-color: #222;
-  --border-color: #dcdcdc;
-  --input-bg: #fff;
+  --border-color: #e0e0e0;
+  --input-bg: #ffffff;
   --primary-color: #2e86de;
 }
 
 body.dark {
-  --bg-color: #1f1f1f;
-  --box-color: #2b2b2b;
+  --bg-color: #121217;
+  --box-color: #1f1f23;
   --text-color: #f1f1f1;
-  --border-color: #3a3a3a;
-  --input-bg: #333;
+  --border-color: #333;
+  --input-bg: #26262a;
   --primary-color: #4a90e2;
 }
+
+body { background: var(--bg-color); color: var(--text-color); }

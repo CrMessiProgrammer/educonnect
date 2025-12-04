@@ -1,51 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EduConnect - Dashboard</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/theme.css">
-  <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="stylesheet" href="css/forms-tables.css">
-  <link rel="stylesheet" href="css/interactivity.css">
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/forms-tables.css" />
+  <link rel="stylesheet" href="css/interactivity.css" />
 </head>
 <body>
   <div class="dashboard-container">
-    <!-- Menu lateral -->
-    <aside class="sidebar">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Menu principal">
       <div class="logo">
-        <img src="assets/logo - tema escuro.png" alt="Logo EduConnect">
+        <img src="assets/logo - tema escuro.png" alt="Logo EduConnect" />
         <h2>EduConnect</h2>
       </div>
+
       <nav>
         <ul>
-          <li class="active" data-section="alunos">Alunos</li>
-          <li data-section="professores">Professores</li>
-          <li data-section="calendario">Calendário</li>
-          <li data-section="relatorios">Relatórios</li>
+          <li class="active" data-section="alunos" role="menuitem">Alunos</li>
+          <li data-section="professores" role="menuitem">Professores</li>
+          <li data-section="calendario" role="menuitem">Calendário</li>
+          <li data-section="relatorios" role="menuitem">Relatórios</li>
         </ul>
       </nav>
+
       <button id="logoutBtn" class="logout">Sair</button>
     </aside>
 
-    <!-- Conteúdo principal -->
-    <main class="main-content">
+    <!-- Main -->
+    <main class="main-content" role="main">
       <header class="topbar">
-        <div class="user-info">
+        <div class="user-info" id="topbarInfo">
           <span id="userName">Olá, usuário!</span>
+          <small id="userRole" class="user-role">—</small>
         </div>
-        <div class="theme-toggle">
-          <span id="themeText">Modo Claro</span>
-          <label class="switch">
-            <input type="checkbox" id="themeSwitch">
-            <span class="slider"></span>
-          </label>
+
+        <div class="topbar-actions">
+          <div class="theme-toggle">
+            <span id="themeTextTop">Modo Claro</span>
+            <label class="switch">
+              <input type="checkbox" id="themeSwitchTop" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Logout mobile (aparece via CSS) -->
+          <button id="logoutMobile" class="logout-mobile" aria-label="Sair">Sair</button>
         </div>
       </header>
 
-      <!-- Área dinâmica -->
-      <section id="contentArea" class="content-area">
+      <section id="contentArea" class="content-area" tabindex="0">
         <h2>Bem-vindo ao Painel</h2>
         <p>Selecione uma das seções no menu para começar.</p>
       </section>

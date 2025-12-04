@@ -1,40 +1,66 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EduConnect - Login</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/theme.css" />
 </head>
 <body>
   <main class="login-container">
-    <section class="login-box">
+    <section class="login-box" role="main" aria-labelledby="loginTitle">
       <div class="logo-area">
-        <img src="assets/logo - tema escuro.png" alt="Logo da EduConnect">
-        <h1>EduConnect</h1>
+        <img src="assets/logo - tema escuro.png" alt="Logo da EduConnect" />
+        <h1 id="loginTitle">EduConnect</h1>
       </div>
 
-      <form class="login-form" id="loginForm">
-        <label for="user">Usuário</label>
-        <input type="text" id="user" placeholder="Digite seu usuário">
+      <form class="login-form" id="loginForm" novalidate>
+        <label for="user">Usuário / E-mail</label>
+        <input type="text" id="user" name="user" placeholder="Digite seu usuário ou e-mail" autocomplete="username" />
 
         <label for="password">Senha</label>
-        <input type="password" id="password" placeholder="Digite sua senha">
+        <input type="password" id="password" name="password" placeholder="Digite sua senha" autocomplete="current-password" />
 
-        <button type="submit">Entrar</button>
-        <p id="errorMsg" class="error"></p>
+        <label for="role">Você é</label>
+        <select id="role" name="role" aria-label="Selecione seu tipo de usuário">
+          <option value="student">Aluno</option>
+          <option value="teacher">Professor</option>
+          <option value="admin">Administrador</option>
+        </select>
+
+        <button type="submit" id="loginBtn">Entrar</button>
+
+        <div class="login-actions">
+          <a href="#" id="forgotLink">Esqueceu sua senha?</a>
+        </div>
+
+        <p id="errorMsg" class="error" role="alert" aria-live="assertive"></p>
       </form>
 
       <div class="theme-toggle">
         <span id="themeText">☀️ Modo Claro</span>
-        <label class="switch">
-          <input type="checkbox" id="themeSwitch">
+        <label class="switch" title="Alternar tema">
+          <input type="checkbox" id="themeSwitch" aria-label="Alternar tema" />
           <span class="slider"></span>
         </label>
       </div>
     </section>
   </main>
+
+  <!-- Modal simples para 'Esqueceu sua senha' -->
+  <div id="forgotModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+      <h3 id="forgotTitle">Recuperar senha</h3>
+      <p>Digite seu e-mail para receber instruções (simulação).</p>
+      <input type="email" id="forgotEmail" placeholder="seu@email.com" />
+      <div class="modal-actions">
+        <button id="forgotSend">Enviar</button>
+        <button id="forgotClose" class="secondary">Cancelar</button>
+      </div>
+      <p id="forgotMsg" class="small-msg"></p>
+    </div>
+  </div>
 
   <script src="js/main.js"></script>
 </body>
