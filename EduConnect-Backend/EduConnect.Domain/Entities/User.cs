@@ -1,18 +1,12 @@
-using EduConnect.Domain.Enums;
-
 namespace EduConnect.Domain.Entities;
 
-public class User
+public abstract class User // 'abstract' para ninguém criar um "User" puro, deve ser um tipo específico
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    public string Name { get; set; } = string.Empty;
+    public string Nome { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
-    public UserRole Role { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    // Relacionamento para o Responsável (Pai/Mãe)
-    // Se for um Aluno, ele pode ter um ResponsávelId
-    public Guid? ParentId { get; set; }
-    public User? Parent { get; set; }
+    public string CPF { get; set; } = string.Empty; // Documento base para todos
+    public bool Ativo { get; set; } = true;
+    public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
 }
