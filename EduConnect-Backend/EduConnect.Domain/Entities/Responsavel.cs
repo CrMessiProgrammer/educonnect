@@ -2,6 +2,7 @@ namespace EduConnect.Domain.Entities;
 
 public class Responsavel : User
 {
+    public string Email { get; set; } = string.Empty;
     public string Telefone { get; set; } = string.Empty;
     public string Parentesco { get; set; } = string.Empty; // Ex: Pai, Mãe, Tutor
 

@@ -2,7 +2,19 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EduConnect.Domain\EduConnect.Domain.csproj" />
+    <ProjectReference Include="..\EduConnect.Infrastructure\EduConnect.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="MailKit" Version="4.14.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>

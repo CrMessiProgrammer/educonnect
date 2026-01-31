@@ -4,6 +4,7 @@ using EduConnect.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduConnect.Infrastructure.Migrations
 {
     [DbContext(typeof(EduConnectDbContext))]
-    partial class EduConnectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260129013756_InitialFinal")]
+    partial class InitialFinal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +40,9 @@ namespace EduConnect.Infrastructure.Migrations
 
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -68,16 +74,6 @@ namespace EduConnect.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("Users", t =>
-                        {
-                            t.Property("Email")
-                                .HasColumnName("Administrador_Email");
-                        });
-
                     b.HasDiscriminator().HasValue("Administrador");
 
                     b.HasData(
@@ -87,10 +83,10 @@ namespace EduConnect.Infrastructure.Migrations
                             Ativo = true,
                             CPF = "000.000.000-00",
                             DataCriacao = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@educonnect.com",
                             Nome = "Administrador Geral",
-                            PasswordHash = "$2a$11$R9h/lIPzHZ7fJL6FfPz6eOclM9A3B5Z4G.O9G7P7.G7G7G7G7G7G7",
-                            Cargo = "Coordenador",
-                            Email = "admin@educonnect.com"
+                            PasswordHash = "Admin@123",
+                            Cargo = "Diretor"
                         });
                 });
 
@@ -117,8 +113,9 @@ namespace EduConnect.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("Turma")
-                        .HasColumnType("int");
+                    b.Property<string>("Turma")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("ResponsavelId");
 
@@ -128,10 +125,6 @@ namespace EduConnect.Infrastructure.Migrations
             modelBuilder.Entity("EduConnect.Domain.Entities.Professor", b =>
                 {
                     b.HasBaseType("EduConnect.Domain.Entities.User");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Especialidade")
                         .IsRequired()
@@ -144,22 +137,12 @@ namespace EduConnect.Infrastructure.Migrations
                     b.Property<string>("RP")
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Users", t =>
-                        {
-                            t.Property("Email")
-                                .HasColumnName("Professor_Email");
-                        });
-
                     b.HasDiscriminator().HasValue("Professor");
                 });
 
             modelBuilder.Entity("EduConnect.Domain.Entities.Responsavel", b =>
                 {
                     b.HasBaseType("EduConnect.Domain.Entities.User");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Parentesco")
                         .IsRequired()
