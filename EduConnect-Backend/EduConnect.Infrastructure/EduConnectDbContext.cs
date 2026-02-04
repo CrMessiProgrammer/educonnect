@@ -16,7 +16,7 @@ public class EduConnectDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Configuração de Herança (TPH)
+        // 1. Configuração de Herança (TPH)
         modelBuilder.Entity<User>()
             .HasDiscriminator<string>("UserType")
             .HasValue<Aluno>("Aluno")
@@ -24,24 +24,45 @@ public class EduConnectDbContext : DbContext
             .HasValue<Responsavel>("Responsavel")
             .HasValue<Administrador>("Administrador");
 
-        // Configura relacionamento Aluno -> Responsavel
+        // 2. Padronização de Datas (Somente Data, sem Hora)
+        // Isso afeta a data de criação de TODOS os usuários
+        modelBuilder.Entity<User>()
+            .Property(u => u.DataCriacao)
+            .HasColumnType("date");
+
+        modelBuilder.Entity<Aluno>()
+            .Property(a => a.DataNascimento)
+            .HasColumnType("date");
+
+        // 3. Relacionamento Aluno -> Responsavel
         modelBuilder.Entity<Aluno>()
             .HasOne(a => a.Responsavel)
             .WithMany(r => r.Alunos)
             .HasForeignKey(a => a.ResponsavelId)
-            .OnDelete(DeleteBehavior.NoAction); // Impedi o "ciclo de deleção"
+            .OnDelete(DeleteBehavior.NoAction);
 
-        // Seed do Administrador Único
+        // 4. Conversão de Enums para String no Banco
+        // Assim ficará "Ativo" ou "Pendente" direto no SQL Server
+        modelBuilder.Entity<Aluno>()
+            .Property(a => a.Status)
+            .HasConversion<string>();
+
+        // 5. PADRONIZAÇÃO DE NOMES DE COLUNA
+        // Força o EF a usar apenas "Email" para todos, sem o prefixo da classe
+        modelBuilder.Entity<Professor>().Property(p => p.Email).HasColumnName("Email");
+        modelBuilder.Entity<Administrador>().Property(a => a.Email).HasColumnName("Email");
+        modelBuilder.Entity<Responsavel>().Property(r => r.Email).HasColumnName("Email");
+
+        // 6. Seed do Administrador (Dados iniciais do sistema)
         modelBuilder.Entity<Administrador>().HasData(new Administrador
         {
-            // ID FIXO (String convertida para Guid)
             Id = Guid.Parse("A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D"),
             Nome = "Administrador Geral",
             Email = "admin@educonnect.com",
-            PasswordHash = "$2a$11$R9h/lIPzHZ7fJL6FfPz6eOclM9A3B5Z4G.O9G7P7.G7G7G7G7G7G7", // AGORA COM HASH!
+            PasswordHash = "$2a$11$R9h/lIPzHZ7fJL6FfPz6eOclM9A3B5Z4G.O9G7P7.G7G7G7G7G7G7", // Hash de Admin@123
             CPF = "000.000.000-00",
             Cargo = "Coordenador",
-            DataCriacao = new DateTime(2026, 1, 1) // Data fixa
+            DataCriacao = new DateTime(2026, 1, 1)
         });
 
         base.OnModelCreating(modelBuilder);

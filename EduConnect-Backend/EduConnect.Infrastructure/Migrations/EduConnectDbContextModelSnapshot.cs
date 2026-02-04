@@ -36,7 +36,7 @@ namespace EduConnect.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -70,13 +70,9 @@ namespace EduConnect.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("Users", t =>
-                        {
-                            t.Property("Email")
-                                .HasColumnName("Administrador_Email");
-                        });
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Email");
 
                     b.HasDiscriminator().HasValue("Administrador");
 
@@ -99,7 +95,7 @@ namespace EduConnect.Infrastructure.Migrations
                     b.HasBaseType("EduConnect.Domain.Entities.User");
 
                     b.Property<DateTime>("DataNascimento")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("HistoricoEscolarPath")
                         .HasColumnType("nvarchar(max)");
@@ -114,8 +110,9 @@ namespace EduConnect.Infrastructure.Migrations
                     b.Property<Guid>("ResponsavelId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Turma")
                         .HasColumnType("int");
@@ -131,7 +128,9 @@ namespace EduConnect.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Email");
 
                     b.Property<string>("Especialidade")
                         .IsRequired()
@@ -144,12 +143,6 @@ namespace EduConnect.Infrastructure.Migrations
                     b.Property<string>("RP")
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Users", t =>
-                        {
-                            t.Property("Email")
-                                .HasColumnName("Professor_Email");
-                        });
-
                     b.HasDiscriminator().HasValue("Professor");
                 });
 
@@ -159,11 +152,9 @@ namespace EduConnect.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Parentesco")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Email");
 
                     b.Property<string>("Telefone")
                         .IsRequired()
