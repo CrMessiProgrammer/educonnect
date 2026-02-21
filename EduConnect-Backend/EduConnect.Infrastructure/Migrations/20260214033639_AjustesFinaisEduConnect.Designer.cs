@@ -4,6 +4,7 @@ using EduConnect.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduConnect.Infrastructure.Migrations
 {
     [DbContext(typeof(EduConnectDbContext))]
-    partial class EduConnectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260214033639_AjustesFinaisEduConnect")]
+    partial class AjustesFinaisEduConnect
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,73 +24,6 @@ namespace EduConnect.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("EduConnect.Domain.Entities.Frequencia", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AlunoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DataAula")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Disciplina")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Presente")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("ProfessorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlunoId");
-
-                    b.HasIndex("ProfessorId");
-
-                    b.ToTable("Frequencias");
-                });
-
-            modelBuilder.Entity("EduConnect.Domain.Entities.Nota", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AlunoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Bimestre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DataLancamento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Disciplina")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ProfessorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Valor")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlunoId");
-
-                    b.HasIndex("ProfessorId");
-
-                    b.ToTable("Notas");
-                });
 
             modelBuilder.Entity("EduConnect.Domain.Entities.Turma", b =>
                 {
@@ -105,8 +41,9 @@ namespace EduConnect.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Turno")
-                        .HasColumnType("int");
+                    b.Property<string>("Turno")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -245,7 +182,7 @@ namespace EduConnect.Infrastructure.Migrations
                 {
                     b.HasBaseType("EduConnect.Domain.Entities.User");
 
-                    b.Property<string>("Disciplina")
+                    b.Property<string>("AreaAtuacao")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -289,44 +226,6 @@ namespace EduConnect.Infrastructure.Migrations
                         .HasFilter("[Email] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("Responsavel");
-                });
-
-            modelBuilder.Entity("EduConnect.Domain.Entities.Frequencia", b =>
-                {
-                    b.HasOne("EduConnect.Domain.Entities.Aluno", "Aluno")
-                        .WithMany()
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("EduConnect.Domain.Entities.Professor", "Professor")
-                        .WithMany()
-                        .HasForeignKey("ProfessorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Aluno");
-
-                    b.Navigation("Professor");
-                });
-
-            modelBuilder.Entity("EduConnect.Domain.Entities.Nota", b =>
-                {
-                    b.HasOne("EduConnect.Domain.Entities.Aluno", "Aluno")
-                        .WithMany()
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("EduConnect.Domain.Entities.Professor", "Professor")
-                        .WithMany()
-                        .HasForeignKey("ProfessorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Aluno");
-
-                    b.Navigation("Professor");
                 });
 
             modelBuilder.Entity("ProfessorTurma", b =>

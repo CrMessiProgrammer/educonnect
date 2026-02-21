@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using EduConnect.Application.Services;
 using EduConnect.Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EduConnect.API.Controllers;
 
@@ -30,11 +31,19 @@ public class MatriculaController : ControllerBase
         }
     }
 
-    // VAMOS ADICIONAR O BOTÃO DE APROVAÇÃO PARA O ADMIN JÁ?
+    [Authorize(Roles = "Administrador")]
     [HttpPut("aprovar/{id}")]
-    public async Task<IActionResult> Aprovar(Guid id)
+    public async Task<IActionResult> Aprovar(Guid id, [FromBody] AprovarMatriculaDto dto)
     {
-        await _service.AprovarMatricula(id);
-        return Ok(new { message = "Matrícula aprovada! RA e Senha enviados ao responsável." });
+        try
+        {
+            // Passa o ID do aluno e o ID da Turma para o Service
+            await _service.AprovarMatricula(id, dto.TurmaId);
+            return Ok(new { message = "Matrícula aprovada! Aluno(a) vinculado à turma e credenciais (RA e Senha) enviadas ao responsável." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = "Erro ao aprovar matrícula.", error = ex.Message });
+        }
     }
 }

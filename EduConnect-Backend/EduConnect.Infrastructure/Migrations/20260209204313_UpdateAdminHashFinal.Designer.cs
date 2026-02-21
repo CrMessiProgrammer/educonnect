@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduConnect.Infrastructure.Migrations
 {
     [DbContext(typeof(EduConnectDbContext))]
-    [Migration("20260203233935_InitialRefactoredSchema")]
-    partial class InitialRefactoredSchema
+    [Migration("20260209204313_UpdateAdminHashFinal")]
+    partial class UpdateAdminHashFinal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,10 +84,10 @@ namespace EduConnect.Infrastructure.Migrations
                         {
                             Id = new Guid("a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d"),
                             Ativo = true,
-                            CPF = "000.000.000-00",
+                            CPF = "00000000000",
                             DataCriacao = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Nome = "Administrador Geral",
-                            PasswordHash = "$2a$11$R9h/lIPzHZ7fJL6FfPz6eOclM9A3B5Z4G.O9G7P7.G7G7G7G7G7G7",
+                            PasswordHash = "$2a$11$mC8mByXW8v9O0eS3N6.uP.X7X9IqN6o5A6W8jV7U5F4D3C2B1A0Z.",
                             Cargo = "Coordenador",
                             Email = "admin@educonnect.com"
                         });
@@ -129,21 +129,18 @@ namespace EduConnect.Infrastructure.Migrations
                 {
                     b.HasBaseType("EduConnect.Domain.Entities.User");
 
+                    b.Property<string>("AreaAtuacao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Email");
 
-                    b.Property<string>("Especialidade")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Formacao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("RP")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("Professor");

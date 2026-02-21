@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EduConnect.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialRefactoredSchema : Migration
+    public partial class ResetInicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,8 +31,7 @@ namespace EduConnect.Infrastructure.Migrations
                     RA = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResponsavelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Formacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Especialidade = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AreaAtuacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RP = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },

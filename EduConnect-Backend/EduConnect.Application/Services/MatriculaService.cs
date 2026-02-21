@@ -30,53 +30,79 @@ public class MatriculaService
         // Simulação de salvamento de arquivo (Gera um nome único para o PDF)
         string caminhoArquivo = $"uploads/historicos/{Guid.NewGuid()}.pdf";
 
-        // Cria o Responsável com senha protegida por Hash (Boa prática de segurança)
-        var responsavel = new Responsavel
-        {
-            Nome = dto.ResponsavelNome,
-            Email = dto.ResponsavelEmail,
-            CPF = dto.ResponsavelCPF,
-            Telefone = dto.ResponsavelTelefone,
-            PasswordHash = PasswordHasher.HashPassword(Guid.NewGuid().ToString())
-        };
+        // --- LÓGICA DE REAPROVEITAMENTO DO RESPONSÁVEL ---
+        // Tenta encontrar um responsável já cadastrado pelo CPF
+        var responsavel = await _context.Responsaveis
+            .FirstOrDefaultAsync(r => r.CPF == dto.ResponsavelCPF);
 
-        // Cria o Aluno com status inicial Pendente
+        // Se não existir, aí sim criamos um novo objeto e adicionamos ao banco
+        if (responsavel == null)
+        {
+            // Cria o Responsável com senha protegida por Hash (Boa prática de segurança)
+            responsavel = new Responsavel
+            {
+                Nome = dto.ResponsavelNome,
+                Email = dto.ResponsavelEmail,
+                CPF = dto.ResponsavelCPF,
+                Telefone = dto.ResponsavelTelefone,
+                PasswordHash = PasswordHasher.HashPassword(Guid.NewGuid().ToString())
+            };
+
+            _context.Responsaveis.Add(responsavel);
+        }
+        else
+        {
+            // Atualiza o telefone ou e-mail caso o pai tenha mudado 
+            // no momento da nova matrícula
+            responsavel.Telefone = dto.ResponsavelTelefone;
+            responsavel.Email = dto.ResponsavelEmail;
+        }
+
+        // Cria o Aluno com status inicial Pendente e vinculado ao responsável (seja ele novo ou antigo)
         var aluno = new Aluno
         {
             Nome = dto.AlunoNome,
             CPF = dto.AlunoCPF,
             DataNascimento = dto.AlunoDataNascimento,
-            Turma = dto.AlunoTurma,
+            TurmaId = null, // Deixa vazio para o Admin decidir depois
             Responsavel = responsavel,
             Status = Aluno.EnrollmentStatus.Pendente,
 
             // Matricula exibe o estado enquanto não há um número oficial
-            Matricula = "AGUARDANDO APROVAÇÃO",
+            // Guarda a série aqui por enquanto
+            Matricula = "AGUARDANDO APROVAÇÃO - " + dto.SeriePretendida,
             RA = null, // Fica nulo (melhor prática de mercado para dados inexistentes)
 
             HistoricoEscolarPath = caminhoArquivo,
             PasswordHash = PasswordHasher.HashPassword(Guid.NewGuid().ToString())
         };
 
-        _context.Responsaveis.Add(responsavel);
         _context.Alunos.Add(aluno);
+
+        // Salva as alterações (Se o responsável for novo, ele salva o pai e o filho. 
+        // Se for antigo, salva apenas o novo filho e o vínculo)
         await _context.SaveChangesAsync();
 
         // Notifica o Admin via e-mail real
         await _emailService.EnviarEmailAsync("admin@educonnect.com",
             "Nova Matrícula Pendente",
-            $"O aluno {aluno.Nome} solicitou matrícula e aguarda sua revisão no painel.");
+            $"O(A) aluno(a) {aluno.Nome} solicitou matrícula e aguarda sua revisão no painel.");
     }
 
     // 2: Aprovação (O que o Administrador faz no painel)
-    public async Task AprovarMatricula(Guid alunoId)
+    public async Task AprovarMatricula(Guid alunoId, Guid turmaId)
     {
         // Carrega o aluno e o responsável garantindo que os dados estejam vinculados (Include)
         var aluno = await _context.Alunos
             .Include(a => a.Responsavel)
             .FirstOrDefaultAsync(a => a.Id == alunoId);
 
-        if (aluno == null) return;
+        // Valida se a aluno existe
+        if (aluno == null) throw new Exception("Aluno não encontrado.");
+
+        // Valida se a turma existe
+        var turma = await _context.Turmas.FindAsync(turmaId);
+        if (turma == null) throw new Exception("Turma não encontrada.");
 
         // Gera o número oficial de identificação (Pode ser o mesmo para RA e Matrícula)
         string numeroOficial = "RA" + DateTime.Now.Year + new Random().Next(1000, 9999);
@@ -98,12 +124,15 @@ public class MatriculaService
         // A senha temporária é transformada em Hash antes de ir para o banco
         aluno.PasswordHash = PasswordHasher.HashPassword(senhaTemporaria);
 
+        // Vincula o aluno à turma
+        aluno.TurmaId = turmaId;
+
         await _context.SaveChangesAsync();
 
         // E-mail de boas-vindas com as credenciais de acesso
         string mensagem = $@"
             <h2>Matrícula Confirmada!</h2>
-            <p>Olá! O cadastro do aluno <b>{aluno.Nome}</b> foi aprovado com sucesso.</p>
+            <p>Olá! O cadastro do(a) aluno(a) <b>{aluno.Nome}</b> foi aprovado com sucesso.</p>
             <p>A partir de agora, o acesso ao portal deve ser feito com os dados abaixo:</p>
             <ul>
                 <li><b>RA (Login):</b> {aluno.RA}</li>
