@@ -3,9 +3,9 @@ namespace EduConnect.Domain.Entities;
 public class Professor : User
 {
     public string Email { get; set; } = string.Empty;
-    public string Formacao { get; set; } = string.Empty; // Ex: "Licenciatura em Matemática"
-    public string Especialidade { get; set; } = string.Empty; // Ex: "Matemática/Física"
-    public string? RP { get; set; } // Registro do Professor
+    public string Disciplina { get; set; } = string.Empty; // Ex: "Matemática/Física"
+    public string RP { get; set; } = string.Empty; // Registro do Professor
 
-    // Lista de matérias ou turmas que ele leciona (implementar mais tarde)
+    // Relacionamento N:N com Turmas
+    public virtual ICollection<Turma> Turmas { get; set; } = new List<Turma>();
 }

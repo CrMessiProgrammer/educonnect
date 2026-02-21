@@ -12,31 +12,32 @@ public class MatriculaDto
     public string AlunoNome { get; set; } = string.Empty;
 
     [Required]
-    [RegularExpression(@"^\d{11,15}$", ErrorMessage = "CPF deve conter apenas números (11-15 dígitos).")]
+    [RegularExpression(@"^\d{11}$", ErrorMessage = "CPF deve ter exatamente 11 números, sem pontos ou traços.")]
     public string AlunoCPF { get; set; } = string.Empty;
 
     [Required]
     public DateTime AlunoDataNascimento { get; set; }
 
     [Required]
-    public Aluno.TurmaEscolar AlunoTurma { get; set; }
+    public string SeriePretendida { get; set; } = string.Empty; // Ex: "1º Ano Fundamental", "3º Ano Médio"
 
-    [Required]
-    public IFormFile ArquivoHistorico { get; set; } // O arquivo PDF
+    [Required(ErrorMessage = "O arquivo do histórico escolar é obrigatório.")]
+    public IFormFile ArquivoHistorico { get; set; } = default!; // O arquivo PDF
 
     // --- Dados do Responsável ---
-    [Required]
+    [Required(ErrorMessage = "O nome do responsável é obrigatório.")]
+    [RegularExpression(@"^[A-Z][a-z]+( [A-Z][a-z]+)+$", ErrorMessage = "Nome deve ser composto e iniciar com maiúsculas.")]
     public string ResponsavelNome { get; set; } = string.Empty;
 
     [Required]
-    [EmailAddress(ErrorMessage = "E-mail inválido.")]
+    [EmailAddress(ErrorMessage = "E-mail inválido. Ex: usuario@dominio.com")]
     public string ResponsavelEmail { get; set; } = string.Empty;
 
     [Required]
-    [RegularExpression(@"^\d{11,15}$", ErrorMessage = "CPF deve conter apenas números.")]
+    [RegularExpression(@"^\d{11}$", ErrorMessage = "CPF deve ter exatamente 11 números, sem pontos ou traços.")]
     public string ResponsavelCPF { get; set; } = string.Empty;
 
     [Required]
-    [RegularExpression(@"^\d{11,15}$", ErrorMessage = "Telefone deve conter apenas números.")]
+    [RegularExpression(@"^\d{10,11}$", ErrorMessage = "Telefone deve ter entre 10 e 11 números, apenas dígitos.")]
     public string ResponsavelTelefone { get; set; } = string.Empty;
 }

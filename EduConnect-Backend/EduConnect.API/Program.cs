@@ -1,36 +1,78 @@
 using Microsoft.EntityFrameworkCore;
 using EduConnect.Infrastructure.Context;
-using EduConnect.Application.Services; // ADICIONE ESTA LINHA PARA RESOLVER OS ERROS
+using EduConnect.Application.Services;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Configuração do Banco
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<EduConnectDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 2. Registro dos Serviços (Dependency Injection)
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<AlunoService>();
 builder.Services.AddScoped<MatriculaService>();
 builder.Services.AddScoped<ProfessorService>();
+builder.Services.AddScoped<TurmaService>();
+builder.Services.AddScoped<BoletimService>();
 
 // 3. Controllers e Swagger
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Configuração do Swagger para suportar JWT
+// Swagger Config - Usando nomes completos para evitar erro de referência
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "EduConnect API", Version = "v1" });
 
-// Configura os Controllers e as opções de JSON em uma única corrente
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
-        // Isso faz com que os Enums (como TurmaEscolar e Status) 
-        // apareçam como TEXTO no Swagger, e não como números.
-        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+        Description = "JWT Authorization header usando o esquema Bearer. Exemplo: \"12345abcdef\"",
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
     });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+// --- CONFIGURAÇÃO DO JWT ---
+var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"] ?? "ChaveSegurancaMuitoLongaPadrao123!");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// 4. Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -38,6 +80,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
