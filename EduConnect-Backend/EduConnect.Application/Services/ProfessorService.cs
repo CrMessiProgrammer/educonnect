@@ -34,10 +34,26 @@ public class ProfessorService
             .ToListAsync();
     }
 
-    public async Task<Professor?> ObterPorId(Guid id) =>
-        await _context.Professores
+    public async Task<ProfessorDetalhadoDto?> ObterPorId(Guid id)
+    {
+        var prof = await _context.Professores
             .Include(p => p.Turmas)
             .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (prof == null) return null;
+
+        // Mapeamento manual (Segurança total: você escolhe o que sai)
+        return new ProfessorDetalhadoDto
+        {
+            Id = prof.Id,
+            Nome = prof.Nome,
+            Email = prof.Email,
+            CPF = prof.CPFFormatado, // Pega o formatado já criado
+            Disciplina = prof.Disciplina,
+            RP = prof.RP,
+            Turmas = prof.Turmas.Select(t => t.Nome).ToList()
+        };
+    }
 
     // Método de cadastro
     public async Task CadastrarProfessor(ProfessorCreateDto dto)
@@ -152,7 +168,7 @@ public class ProfessorService
         if (notaExistente != null)
         {
             // Se já existe, apenas atualiza o valor
-            notaExistente.Valor = dto.Valor;
+            notaExistente.ValorNota = dto.Nota;
             notaExistente.DataLancamento = DateTime.Now;
         }
         else
@@ -160,7 +176,7 @@ public class ProfessorService
             // Se não existe, cria uma nova
             var novaNota = new Nota
             {
-                Valor = dto.Valor,
+                ValorNota = dto.Nota,
                 Bimestre = dto.Bimestre,
                 AlunoId = dto.AlunoId,
                 ProfessorId = professorId,

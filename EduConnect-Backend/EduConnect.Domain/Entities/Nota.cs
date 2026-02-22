@@ -8,7 +8,7 @@ public class Nota
     public Guid Id { get; set; } = Guid.NewGuid();
 
     // O valor da nota (ex: 8.5)
-    public decimal Valor { get; set; }
+    public decimal ValorNota { get; set; }
 
     // Qual bimestre esta nota se refere
     public Bimestre Bimestre { get; set; }

@@ -116,7 +116,7 @@ public class EduConnectDbContext : DbContext
         modelBuilder.Entity<Nota>(entity =>
         {
             // Define precisão para a nota (ex: 10.00)
-            entity.Property(n => n.Valor).HasPrecision(5, 2);
+            entity.Property(n => n.ValorNota).HasPrecision(4, 2);
 
             // Converte o Enum Bimestre para String
             entity.Property(n => n.Bimestre).HasConversion<string>();

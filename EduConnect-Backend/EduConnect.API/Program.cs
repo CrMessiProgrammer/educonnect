@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using EduConnect.Infrastructure.Context;
 using EduConnect.Application.Services;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -18,9 +19,15 @@ builder.Services.AddScoped<MatriculaService>();
 builder.Services.AddScoped<ProfessorService>();
 builder.Services.AddScoped<TurmaService>();
 builder.Services.AddScoped<BoletimService>();
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<RankingService>();
 
 // 3. Controllers e Swagger
-builder.Services.AddControllers();
+// Diz ao .NET: "Se você achar um ciclo infinito, ignore e pare de aprofundar"
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 builder.Services.AddEndpointsApiExplorer();
 // Configuração do Swagger para suportar JWT
 // Swagger Config - Usando nomes completos para evitar erro de referência
