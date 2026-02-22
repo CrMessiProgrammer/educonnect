@@ -41,10 +41,10 @@ public class BoletimService
             var linha = new LinhaBoletimDto
             {
                 Disciplina = disc,
-                Nota1B = notasDaDisc.FirstOrDefault(n => n.Bimestre == Bimestre.Primeiro)?.Valor,
-                Nota2B = notasDaDisc.FirstOrDefault(n => n.Bimestre == Bimestre.Segundo)?.Valor,
-                Nota3B = notasDaDisc.FirstOrDefault(n => n.Bimestre == Bimestre.Terceiro)?.Valor,
-                Nota4B = notasDaDisc.FirstOrDefault(n => n.Bimestre == Bimestre.Quarto)?.Valor
+                Nota1B = notasDaDisc.FirstOrDefault(n => n.Bimestre == Bimestre.Primeiro)?.ValorNota,
+                Nota2B = notasDaDisc.FirstOrDefault(n => n.Bimestre == Bimestre.Segundo)?.ValorNota,
+                Nota3B = notasDaDisc.FirstOrDefault(n => n.Bimestre == Bimestre.Terceiro)?.ValorNota,
+                Nota4B = notasDaDisc.FirstOrDefault(n => n.Bimestre == Bimestre.Quarto)?.ValorNota
             };
 
             // Cálculo da Média
@@ -56,6 +56,9 @@ public class BoletimService
             {
                 var presencas = freqDaDisc.Count(f => f.Presente);
                 linha.PercentualPresenca = (double)presencas / freqDaDisc.Count * 100;
+
+                // Conta todos os registros onde 'Presente' é falso
+                linha.TotalFaltas = freqDaDisc.Count(f => !f.Presente);
             }
 
             // Regra de Status (MEC: 75% presença e média 6.0)

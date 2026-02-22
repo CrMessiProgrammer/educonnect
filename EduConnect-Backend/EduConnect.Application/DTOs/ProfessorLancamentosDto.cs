@@ -13,7 +13,7 @@ public class LancamentoNotaDto
 
     [Required]
     [Range(0, 10, ErrorMessage = "A nota deve ser entre 0 e 10.")]
-    public decimal Valor { get; set; }
+    public decimal Nota { get; set; }
 
     [Required]
     public Bimestre Bimestre { get; set; }

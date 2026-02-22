@@ -92,7 +92,7 @@ public class ProfessorController : ControllerBase
         try
         {
             await _service.LancarNotaAsync(professorId, dto);
-            return Ok(new { message = "Nota lançada/atualizada com sucesso!" });
+            return Ok(new { message = "Nota lançada com sucesso!" });
         }
         catch (Exception ex)
         {

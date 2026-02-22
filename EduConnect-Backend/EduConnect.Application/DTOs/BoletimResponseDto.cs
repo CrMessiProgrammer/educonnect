@@ -17,5 +17,6 @@ public class LinhaBoletimDto
     public decimal? Nota4B { get; set; }
     public decimal MediaFinal { get; set; }
     public double PercentualPresenca { get; set; }
+    public int TotalFaltas { get; set; }
     public string Status { get; set; } = string.Empty; // Aprovado, Recuperação, etc.
 }
