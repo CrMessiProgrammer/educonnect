@@ -7,7 +7,6 @@ namespace EduConnect.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Administrador")] // Proteção total para este controller
 public class AlunoController : ControllerBase
 {
     private readonly AlunoService _alunoService;
@@ -19,6 +18,7 @@ public class AlunoController : ControllerBase
 
     // Se não vier nada na busca, ele traz tudo. Se vier, ele filtra.
     [HttpGet]
+    [Authorize(Roles = "Administrador")] // Proteção total para este controller
     public async Task<IActionResult> GetAll([FromQuery] string? busca)
     {
         var alunos = await _alunoService.GetAllAsync(busca);
@@ -26,6 +26,7 @@ public class AlunoController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "Administrador,Aluno,Responsavel")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var aluno = await _alunoService.GetByIdAsync(id);
@@ -40,6 +41,7 @@ public class AlunoController : ControllerBase
             aluno.Nome,
             aluno.RA,
             aluno.Status.ToString(),
+            aluno.TurmaId,
             aluno.Turma != null ? aluno.Turma.Nome : "Sem Turma",
             aluno.Responsavel != null ? aluno.Responsavel.Nome : "Responsável não vinculado"
         );
@@ -48,6 +50,7 @@ public class AlunoController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Administrador")] // Proteção total para este controller
     public async Task<IActionResult> Update(Guid id, [FromBody] AlunoUpdateDto dto)
     {
         try
@@ -62,6 +65,7 @@ public class AlunoController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrador")] // Proteção total para este controller
     public async Task<IActionResult> Delete(Guid id)
     {
         // Usa o Soft Delete (Desativar) em vez de remover do banco

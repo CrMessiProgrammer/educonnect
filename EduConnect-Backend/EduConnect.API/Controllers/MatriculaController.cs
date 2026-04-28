@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using EduConnect.Application.Services;
 using EduConnect.Application.DTOs;
+using EduConnect.Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 
 namespace EduConnect.API.Controllers;
@@ -29,6 +30,54 @@ public class MatriculaController : ControllerBase
         {
             return BadRequest(new { message = "Erro ao processar matrícula.", error = ex.Message });
         }
+    }
+
+    [HttpGet("pendentes")] // Lista de matrículas pendentes
+    [Authorize(Roles = "Administrador")] // Proteção ativada!
+    public async Task<IActionResult> GetPendentes()
+    {
+        try
+        {
+            var pendentes = await _service.ObterMatriculasPendentesAsync();
+            return Ok(pendentes);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = "Erro ao buscar matrículas pendentes.", error = ex.Message });
+        }
+    }
+
+    [HttpGet("{id}/detalhes")] // Detalhes das Matrículas
+    [Authorize(Roles = "Administrador")] // Proteção ativada!
+    public async Task<IActionResult> GetDetalhes(Guid id)
+    {
+        try
+        {
+            var detalhes = await _service.ObterDetalhesMatriculaAsync(id);
+            return Ok(detalhes);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("{alunoId}/historico")] // Histórico escolar do Aluno
+    [Authorize(Roles = "Administrador")] // Apenas o Admin pode ver o histórico dos alunos
+    public async Task<IActionResult> BaixarHistorico(Guid alunoId, [FromServices] EduConnectDbContext context)
+    {
+        var aluno = await context.Alunos.FindAsync(alunoId);
+        if (aluno == null || string.IsNullOrEmpty(aluno.HistoricoEscolarPath))
+            return NotFound(new { message = "Aluno ou Histórico não encontrado." });
+
+        // Pega o caminho físico no servidor
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), aluno.HistoricoEscolarPath);
+
+        if (!System.IO.File.Exists(filePath))
+            return NotFound(new { message = "O arquivo físico não foi encontrado no servidor." });
+
+        // O "application/pdf" faz o navegador ABRIR o PDF ao invés de só fazer download
+        return PhysicalFile(filePath, "application/pdf", $"Historico_{aluno.Nome}.pdf");
     }
 
     [Authorize(Roles = "Administrador")]

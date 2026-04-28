@@ -71,6 +71,21 @@ public class ProfessorController : ControllerBase
     // =========================================================================
 
     [Authorize(Roles = "Professor")]
+    [HttpGet("{professorId}/minhas-turmas")]
+    public async Task<IActionResult> GetMinhasTurmas(Guid professorId)
+    {
+        try
+        {
+            var turmas = await _service.ObterTurmasDoProfessorAsync(professorId);
+            return Ok(turmas);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [Authorize(Roles = "Professor")]
     [HttpGet("{professorId}/turma/{turmaId}/alunos")]
     public async Task<IActionResult> GetAlunos(Guid professorId, Guid turmaId)
     {

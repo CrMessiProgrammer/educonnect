@@ -40,6 +40,20 @@ public class TurmaController : ControllerBase
         return Ok(new { message = "Turma criada com sucesso!" });
     }
 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        try
+        {
+            await _service.Inativar(id);
+            return Ok(new { message = "Turma inativada com sucesso!" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [HttpPost("{turmaId}/vincular-professor/{professorId}")]
     public async Task<IActionResult> VincularProfessor(Guid turmaId, Guid professorId)
     {

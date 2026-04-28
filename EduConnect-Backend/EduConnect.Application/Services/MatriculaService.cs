@@ -10,11 +10,13 @@ public class MatriculaService
 {
     private readonly EduConnectDbContext _context;
     private readonly EmailService _emailService;
+    private readonly PagamentoService _pagamentoService;
 
-    public MatriculaService(EduConnectDbContext context, EmailService emailService)
+    public MatriculaService(EduConnectDbContext context, EmailService emailService, PagamentoService pagamentoService)
     {
         _context = context;
         _emailService = emailService;
+        _pagamentoService = pagamentoService;
     }
 
     // 1: Solicitação (O que o Aluno/Responsável faz no Front-end)
@@ -29,6 +31,16 @@ public class MatriculaService
 
         // Simulação de salvamento de arquivo (Gera um nome único para o PDF)
         string caminhoArquivo = $"uploads/historicos/{Guid.NewGuid()}.pdf";
+
+        // Salva o arquivo no físico
+        var diretorio = Path.Combine(Directory.GetCurrentDirectory(), "uploads", "historicos");
+        if (!Directory.Exists(diretorio)) Directory.CreateDirectory(diretorio); // Cria a pasta se não existir
+
+        var caminhoCompleto = Path.Combine(Directory.GetCurrentDirectory(), caminhoArquivo);
+        using (var stream = new FileStream(caminhoCompleto, FileMode.Create))
+        {
+            await dto.ArquivoHistorico.CopyToAsync(stream);
+        }
 
         // --- LÓGICA DE REAPROVEITAMENTO DO RESPONSÁVEL ---
         // Tenta encontrar um responsável já cadastrado pelo CPF
@@ -89,7 +101,51 @@ public class MatriculaService
             $"O(A) aluno(a) {aluno.Nome} solicitou matrícula e aguarda sua revisão no painel.");
     }
 
-    // 2: Aprovação (O que o Administrador faz no painel)
+    // 2: Listagem de Pendentes (Visão do Administrador)
+    public async Task<object> ObterMatriculasPendentesAsync()
+    {
+        var pendentes = await _context.Alunos
+            .Include(a => a.Responsavel) // Garante que vai ter o nome do pai/mãe
+            .Where(a => a.Status == Aluno.EnrollmentStatus.Pendente)
+            .Select(a => new
+            {
+                Id = a.Id,
+                NomeAluno = a.Nome,
+                DataNascimento = a.DataNascimento,
+                NomeResponsavel = a.Responsavel.Nome,
+                // Limpamos a string para mostrar só a série no frontend
+                SeriePretendida = a.Matricula.Replace("AGUARDANDO APROVAÇÃO - ", ""),
+                DataSolicitacao = a.DataCriacao
+            })
+            .ToListAsync();
+
+        return pendentes;
+    }
+
+    // 3: Informações detalhadas das Matrículas (Admin visualiza no painel)
+    public async Task<object> ObterDetalhesMatriculaAsync(Guid alunoId)
+    {
+        var aluno = await _context.Alunos
+            .Include(a => a.Responsavel)
+            .FirstOrDefaultAsync(a => a.Id == alunoId);
+
+        if (aluno == null) throw new Exception("Matrícula não encontrada.");
+
+        return new
+        {
+            AlunoNome = aluno.Nome,
+            AlunoCPF = aluno.CPF,
+            AlunoDataNascimento = aluno.DataNascimento,
+            SeriePretendida = aluno.Matricula.Replace("AGUARDANDO APROVAÇÃO - ", ""),
+            ResponsavelNome = aluno.Responsavel.Nome,
+            ResponsavelEmail = aluno.Responsavel.Email,
+            ResponsavelCPF = aluno.Responsavel.CPF,
+            ResponsavelTelefone = aluno.Responsavel.Telefone,
+            DataSolicitacao = aluno.DataCriacao
+        };
+    }
+
+    // 4: Aprovação (O que o Administrador faz no painel)
     public async Task AprovarMatricula(Guid alunoId, Guid turmaId)
     {
         // Carrega o aluno e o responsável garantindo que os dados estejam vinculados (Include)
@@ -129,17 +185,42 @@ public class MatriculaService
 
         await _context.SaveChangesAsync();
 
-        // E-mail de boas-vindas com as credenciais de acesso
-        string mensagem = $@"
-            <h2>Matrícula Confirmada!</h2>
-            <p>Olá! O cadastro do(a) aluno(a) <b>{aluno.Nome}</b> foi aprovado com sucesso.</p>
-            <p>A partir de agora, o acesso ao portal deve ser feito com os dados abaixo:</p>
-            <ul>
-                <li><b>RA (Login):</b> {aluno.RA}</li>
-                <li><b>Senha Temporária:</b> {senhaTemporaria}</li>
-            </ul>
-            <p><i>Dica de segurança: Altere sua senha após o primeiro login.</i></p>";
+        // Gera a cobrança da taxa de matrícula
+        var transacao = await _pagamentoService.GerarTransacaoPixAsync(
+            aluno.Responsavel.Id,
+            "Matricula",
+            $"Taxa de Matrícula - Aluno {aluno.Nome}",
+            350.00m, // Valor fictício da matrícula
+            aluno.Id // O ID do aluno fica como referência
+        );
 
-        await _emailService.EnviarEmailAsync(aluno.Responsavel.Email, "Bem-vindo ao EduConnect - Acesso Liberado", mensagem);
+        // E-mail com credenciais e pix
+        string mensagem = $@"
+            <div style='font-family: Arial, sans-serif; color: #333;'>
+                <h2>Matrícula Pré-Aprovada! &#x0001F389</h2>
+                <p>Olá! O cadastro do(a) aluno(a) <b>{aluno.Nome}</b> foi aprovado academicamente em nossa instituição.</p>
+        
+                <div style='background-color: #f9f9f9; padding: 15px; border-left: 5px solid #2196f3; margin: 20px 0;'>
+                    <h4 style='margin-top: 0;'>&#x0001F511 Acesso do Aluno (Portal)</h4>
+                    <p><b>Login (RA):</b> {aluno.RA}<br>
+                    <b>Senha Temporária:</b> {senhaTemporaria}</p>
+                </div>
+
+                <div style='background-color: #f9f9f9; padding: 15px; border-left: 5px solid #ff9800; margin: 20px 0;'>
+                    <h4 style='margin-top: 0;'>&#x0001F464 Seu Acesso (Área do Responsável)</h4>
+                    <p>Para acompanhar o financeiro, notas e recados, acesse com seu e-mail: <b>{aluno.Responsavel.Email}</b>.</p>
+                    <p><i>Caso seja seu primeiro acesso, clique em <b>'Primeiro Acesso / Esqueci a Senha'</b> na tela de login para definir sua senha pessoal.</i></p>
+                </div>
+
+                <hr>
+                <h3>&#x0001F4B0 Passo Final: Taxa de Matrícula</h3>
+                <p>Para oficializar a matrícula e ativar o acesso do aluno, realize o pagamento via PIX (Valor: R$ 350,00):</p>
+                <div style='background-color: #eee; padding: 10px; border-radius: 5px; font-family: monospace; word-break: break-all;'>
+                    {transacao.CodigoPix}
+                </div>
+                <p style='font-size: 0.9em; color: #666;'>O sistema reconhecerá o pagamento em até 5 minutos e ativará o aluno automaticamente.</p>
+            </div>";
+
+        await _emailService.EnviarEmailAsync(aluno.Responsavel.Email, "EduConnect - Aprovação e Pagamento da Matrícula", mensagem);
     }
 }

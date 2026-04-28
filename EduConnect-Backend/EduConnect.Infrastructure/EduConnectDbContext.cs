@@ -16,6 +16,12 @@ public class EduConnectDbContext : DbContext
     public DbSet<Turma> Turmas { get; set; }
     public DbSet<Nota> Notas { get; set; }
     public DbSet<Frequencia> Frequencias { get; set; }
+    public DbSet<Visita> Visitas { get; set; }
+    public DbSet<PedidoUniforme> PedidosUniforme { get; set; }
+    public DbSet<Transacao> Transacoes { get; set; }
+    public DbSet<Comunicado> Comunicados { get; set; }
+    public DbSet<EventoCalendario> EventosCalendario { get; set; }
+    public DbSet<MensagemChat> MensagensChat { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
