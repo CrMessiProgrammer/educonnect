@@ -5,6 +5,7 @@ public record AlunoResponseDto(
     string Nome,
     string? RA,
     string Status,
+    Guid? TurmaId,
     string? TurmaNome,
     string ResponsavelNome
 );

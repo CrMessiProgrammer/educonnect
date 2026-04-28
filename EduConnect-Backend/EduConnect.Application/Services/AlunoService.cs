@@ -39,6 +39,7 @@ public class AlunoService
                 a.Nome!,
                 a.RA!,
                 a.Status!.ToString(),
+                a.TurmaId,
                 a.Turma != null ? a.Turma.Nome! : "Sem Turma",
                 a.Responsavel != null ? a.Responsavel.Nome! : "Sem Responsável"
             ))

@@ -16,6 +16,7 @@ public class TurmaService
     public async Task<List<TurmaResponseDto>> ListarTodas()
     {
         return await _context.Turmas
+            .Where(t => t.Ativa)
             .Include(t => t.Alunos)
             .Select(t => new TurmaResponseDto(
                 t.Id,                         // 1. Guid
@@ -47,6 +48,7 @@ public class TurmaService
                 a.Nome,
                 a.RA,
                 a.Status.ToString(),
+                a.TurmaId,
                 a.Turma != null ? a.Turma.Nome : "Sem Turma",
                 a.Responsavel.Nome
             ))
@@ -63,6 +65,15 @@ public class TurmaService
         };
 
         _context.Turmas.Add(turma);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task Inativar(Guid id)
+    {
+        var turma = await _context.Turmas.FindAsync(id);
+        if (turma == null) throw new Exception("Turma não encontrada.");
+
+        turma.Ativa = false;
         await _context.SaveChangesAsync();
     }
 

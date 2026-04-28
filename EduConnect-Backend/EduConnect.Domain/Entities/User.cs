@@ -11,6 +11,9 @@ public abstract class User // 'abstract' para ninguém criar um "User" puro, deve
         ? nr.ToString(@"000\.000\.000\-00")
         : CPF;
 
+    public string? ResetCode { get; set; } // Código de 6 dígitos
+    public DateTime? ResetCodeExpiration { get; set; } // Validade do código
+
     public bool Ativo { get; set; } = true;
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
 }

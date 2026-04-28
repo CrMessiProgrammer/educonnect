@@ -4,5 +4,6 @@ namespace EduConnect.Application.DTOs;
 public record LoginResponseDto(
     string Token,
     string Nome,
-    string Tipo // Administrador, Professor ou Aluno
+    string Tipo, // Administrador, Professor ou Aluno
+    Guid Id
 );

@@ -132,13 +132,32 @@ public class ProfessorService
     // --- PORTAL DO PROFESSOR (Lançamento de Notas e Chamada) ---
     // =========================================================================
 
-    // 1. O Professor quer ver quem são os alunos da turma dele
+    // 1. O Professor quer ver as turmas em que ele dá aula para preencher o Dropdown
+    public async Task<List<TurmaResumoDto>> ObterTurmasDoProfessorAsync(Guid professorId)
+    {
+        var professor = await _context.Professores
+            .Include(p => p.Turmas)
+            .FirstOrDefaultAsync(p => p.Id == professorId);
+
+        if (professor == null)
+            throw new Exception("Professor não encontrado.");
+
+        // Retorna apenas Id e Nome para popular a lista suspensa (select) do React
+        return professor.Turmas.Select(t => new TurmaResumoDto
+        {
+            Id = t.Id,
+            Nome = t.Nome
+        }).ToList();
+    }
+
+    // 2. O Professor quer ver quem são os alunos da turma dele
     public async Task<List<Aluno>> ObterAlunosDaTurmaAsync(Guid professorId, Guid turmaId)
     {
         // Verifica se o professor dá aula nessa turma
         var turma = await _context.Turmas
             .Include(t => t.Professores)
             .Include(t => t.Alunos) // Já traz os alunos juntos
+            .ThenInclude(a => a.Responsavel)
             .FirstOrDefaultAsync(t => t.Id == turmaId);
 
         if (turma == null)
@@ -150,7 +169,7 @@ public class ProfessorService
         return turma.Alunos.ToList();
     }
 
-    // 2. O Professor lança a nota
+    // 3. O Professor lança a nota
     public async Task LancarNotaAsync(Guid professorId, LancamentoNotaDto dto)
     {
         var professor = await _context.Professores.FindAsync(professorId);
@@ -188,7 +207,7 @@ public class ProfessorService
         await _context.SaveChangesAsync();
     }
 
-    // 3. O Professor faz a chamada
+    // 4. O Professor faz a chamada
     public async Task LancarFrequenciaAsync(Guid professorId, LancamentoFrequenciaDto dto)
     {
         var professor = await _context.Professores.FindAsync(professorId);
@@ -224,7 +243,7 @@ public class ProfessorService
         await _context.SaveChangesAsync();
     }
 
-    // --- MÉTODO PRIVADO DE APOIO (Reaproveitamento de código) ---
+    // 5. MÉTODO PRIVADO DE APOIO (Reaproveitamento de código) ---
     private async Task ValidarVinculoProfessorAlunoAsync(Guid professorId, Guid turmaId, Guid alunoId)
     {
         var turma = await _context.Turmas

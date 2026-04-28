@@ -22,6 +22,72 @@ namespace EduConnect.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("EduConnect.Domain.Entities.Comunicado", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AutorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataPublicacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Mensagem")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublicoAlvo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("TurmaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TurmaId");
+
+                    b.ToTable("Comunicados");
+                });
+
+            modelBuilder.Entity("EduConnect.Domain.Entities.EventoCalendario", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataFim")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TipoEvento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EventosCalendario");
+                });
+
             modelBuilder.Entity("EduConnect.Domain.Entities.Frequencia", b =>
                 {
                     b.Property<Guid>("Id")
@@ -51,6 +117,33 @@ namespace EduConnect.Infrastructure.Migrations
                     b.HasIndex("ProfessorId");
 
                     b.ToTable("Frequencias");
+                });
+
+            modelBuilder.Entity("EduConnect.Domain.Entities.MensagemChat", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Conteudo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DataEnvio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DestinatarioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Lida")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("RemetenteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MensagensChat");
                 });
 
             modelBuilder.Entity("EduConnect.Domain.Entities.Nota", b =>
@@ -87,6 +180,90 @@ namespace EduConnect.Infrastructure.Migrations
                     b.HasIndex("ProfessorId");
 
                     b.ToTable("Notas");
+                });
+
+            modelBuilder.Entity("EduConnect.Domain.Entities.PedidoUniforme", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AlunoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataPedido")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnderecoEntrega")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Peca")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StatusPagamento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tamanho")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TipoEntrega")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlunoId");
+
+                    b.ToTable("PedidosUniforme");
+                });
+
+            modelBuilder.Entity("EduConnect.Domain.Entities.Transacao", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CodigoPix")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataPagamento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ReferenciaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ResponsavelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Transacoes");
                 });
 
             modelBuilder.Entity("EduConnect.Domain.Entities.Turma", b =>
@@ -137,6 +314,12 @@ namespace EduConnect.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ResetCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResetCodeExpiration")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("UserType")
                         .IsRequired()
                         .HasMaxLength(13)
@@ -152,6 +335,39 @@ namespace EduConnect.Infrastructure.Migrations
                     b.HasDiscriminator<string>("UserType").HasValue("User");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("EduConnect.Domain.Entities.Visita", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataHoraVisita")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataSolicitacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NomeVisitante")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Visitas");
                 });
 
             modelBuilder.Entity("ProfessorTurma", b =>
@@ -291,6 +507,15 @@ namespace EduConnect.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("Responsavel");
                 });
 
+            modelBuilder.Entity("EduConnect.Domain.Entities.Comunicado", b =>
+                {
+                    b.HasOne("EduConnect.Domain.Entities.Turma", "Turma")
+                        .WithMany()
+                        .HasForeignKey("TurmaId");
+
+                    b.Navigation("Turma");
+                });
+
             modelBuilder.Entity("EduConnect.Domain.Entities.Frequencia", b =>
                 {
                     b.HasOne("EduConnect.Domain.Entities.Aluno", "Aluno")
@@ -327,6 +552,17 @@ namespace EduConnect.Infrastructure.Migrations
                     b.Navigation("Aluno");
 
                     b.Navigation("Professor");
+                });
+
+            modelBuilder.Entity("EduConnect.Domain.Entities.PedidoUniforme", b =>
+                {
+                    b.HasOne("EduConnect.Domain.Entities.Aluno", "Aluno")
+                        .WithMany()
+                        .HasForeignKey("AlunoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Aluno");
                 });
 
             modelBuilder.Entity("ProfessorTurma", b =>
