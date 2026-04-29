@@ -3,4 +3,5 @@
   <Project Path="EduConnect.Application/EduConnect.Application.csproj" />
   <Project Path="EduConnect.Domain/EduConnect.Domain.csproj" />
   <Project Path="EduConnect.Infrastructure/EduConnect.Infrastructure.csproj" />
+  <Project Path="EduConnect.Tests/EduConnect.Tests.csproj" />
 </Solution>
