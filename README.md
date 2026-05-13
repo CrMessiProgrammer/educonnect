@@ -1,115 +1,152 @@
-# 📘 EduConnect — Sistema de Gestão Escolar
+# 📘 EduConnect — Sistema de Gestão Escolar Fullstack
 
-O **EduConnect** é um sistema completo de gestão escolar, projetado para modernizar processos pedagógicos e administrativos, melhorar a comunicação entre alunos, professores e administração, e fornecer uma experiência digital eficiente para toda a comunidade escolar.
-
-Este repositório contém o **MVP do front-end** desenvolvido em **HTML, CSS e JavaScript**, como parte do programa **Trainee Digital — TIVIT**.
+O **EduConnect** é uma plataforma robusta de gestão escolar projetada para modernizar a comunicação e administração pedagógica. O sistema utiliza uma arquitetura desacoplada com um Back-end escalável em .NET e um Front-end dinâmico em React.
 
 ---
 
-## 🚀 Objetivo do Projeto
+## 🛠️ Tecnologias e Stacks
 
-Criar uma plataforma educacional moderna que permita:
-
-- **Alunos** acessarem notas, calendário, eventos e avisos.
-- **Professores** gerenciarem turmas, atividades, avaliações e agendas.
-- **Administradores** cuidarem de matrículas, relatórios, cadastros e indicadores.
-
-O projeto está estruturado para evoluir em fases, chegando a uma solução completa com:
-
-- Back-end em **.NET + SQL Server**
-- Autenticação com **JWT**
-- Versionamento com **Clean Architecture**
-- Front-end avançado em **React**
-- Relatórios dinâmicos
-- Painéis gerenciais
-- Recursos inteligentes para apoio pedagógico
-
----
-
-## 🎯 Status do Projeto
-
-| Módulo | Status |
-|--------|--------|
-| **Front-end MVP (HTML/CSS/JS)** | ✔ Concluído |
-| **Documentação técnica completa (PDF)** | ✔ Concluída |
-| **Back-end .NET (API + banco de dados)** | 🔄 Em desenvolvimento |
-| **Front-end avançado em React** | 🔄 Planejado |
-| **Funcionalidades avançadas (dashboards, relatórios, IA)** | 🔄 Planejado |
-
----
-
-## 🛠️ Tecnologias Utilizadas (MVP)
+### **Back-end**
+- **Runtime:** .NET 8 (C#)
+- **Arquitetura:** Clean Architecture (Domain, Application, Infrastructure, API)
+- **ORM:** Entity Framework Core
+- **Banco de Dados:** SQL Server (ou PostgreSQL/SQLite conforme configuração)
+- **Comunicação Real-time:** SignalR (WebSockets) para chat
+- **Relatórios:** QuestPDF
+- **E-mail:** MailKit/MimeKit com integração Ethereal Email (SMTP)
 
 ### **Front-end**
-- HTML5  
-- CSS3 (responsividade, variáveis, modo claro/escuro)  
-- JavaScript (DOM, navegação interna, componentes dinâmicos)  
-- Chart.js (gráficos de desempenho)  
+- **Framework:** React + Vite (TypeScript)
+- **Estilização:** Tailwind CSS + Lucide React (Icons)
+- **Gerenciamento de Estado:** Zustand (Global) & React Query (Server-state)
+- **Gráficos:** Recharts
 
 ---
 
-## 🗂️ Funcionalidades Implementadas
+## 🏗️ Arquitetura e Diferenciais Técnicos
 
-- ✔ Login (simulação)
-- ✔ Tema claro/escuro  
-- ✔ Dashboard funcional  
-- ✔ Sistema de notificações  
-- ✔ Gerenciamento básico de alunos e professores (dados mockados)  
-- ✔ Calendário interativo com compromissos  
-- ✔ Cards de eventos por data  
-- ✔ Tabelas filtráveis  
-- ✔ Layout responsivo (desktop + mobile)  
-- ✔ Base para navegação e expansão futura  
+- **Padrão Decoupled:** Separação total entre Front-end (SPA) e Back-end (RESTful API).
+- **TPH (Table Per Hierarchy):** Implementação de herança no banco de dados para otimização de entidades de Usuário.
+- **Soft Delete:** Exclusão lógica para preservação de integridade de dados e histórico.
+- **RBAC (Role-Based Access Control):** Controle de visibilidade de dados sensíveis (ex: Ranking de Alunos limitado para usuários comuns e completo para gestores).
+- **Fluxo Financeiro:** Simulação de pagamentos via PIX com integração de Webhooks e atualização em tempo real.
 
 ---
 
-## 📄 Documentação Completa
+# 🚀 Como Executar o Projeto
 
-Toda a especificação técnica do EduConnect (seções: visão geral, requisitos, modelagem, arquitetura, casos de uso, fluxos, testes, roadmap etc.) está disponível no PDF:
-
-👉 **`docs/doc-educonnect.pdf`**
-
-> O PDF contém **o projeto completo do sistema como um todo**, incluindo partes ainda não implementadas no código.
-
----
-
-## 🔮 Roadmap (Visão Geral)
-
-### **Fase 1 — MVP Front-end (HTML/CSS/JS)**  
-✔ Layouts, componentes, telas e interatividade  
-✔ Dashboard inicial  
-✔ Calendário e notificações  
-
-### **Fase 2 — Back-end (.NET + SQL Server)**  
-🔄 Estrutura da API  
-🔄 Autenticação com JWT  
-🔄 CRUDs completos  
-🔄 Regras de negócio reais  
-
-### **Fase 3 — Front-end Avançado (React)**  
-🔄 Reescrita do front consumindo API real  
-🔄 Context API / Redux  
-🔄 UI moderna  
-🔄 Painéis e gráficos avançados  
-
-### **Fase 4 — Diferenciais e Inovações**  
-🔄 IA para recomendações pedagógicas  
-🔄 Painéis administrativos avançados  
-🔄 Relatórios exportáveis  
-🔄 Auditoria e logs  
-🔄 Funcionalidades extras para apresentação final
+## **Pré-requisitos**
+- .NET 8 SDK
+- Node.js (v18+) & Yarn ou NPM
+- SQL Server LocalDB ou Instância Docker
 
 ---
 
-## 👨‍💻 Autor
+## **1. Configurando o Back-end**
 
-**Carlos Henrique Nunes**  
-Trainee Digital — TIVIT
+```bash
+# Clone o repositório
+git clone https://github.com/CrMessiProgrammer/EduConnect.git
+
+# Acesse a pasta do servidor
+cd EduConnect/EduConnect.API
+
+# Restaure as dependências
+dotnet restore
+
+# Atualize o banco de dados (Migrations)
+dotnet ef database update
+
+# Execute o projeto
+dotnet run
+```
 
 ---
 
-## ⭐ Observação
+## **2. Configurando o Front-end**
 
-Este projeto está em desenvolvimento contínuo e novas funcionalidades serão implementadas ao longo das próximas entregas do programa.
+```bash
+# Acesse a pasta do cliente
+cd ../EduConnect.Web
+
+# Instale as dependências
+yarn install
+# ou
+npm install
+
+# Execute em modo de desenvolvimento
+yarn dev
+# ou
+npm run dev
+```
+
+---
+
+# 🗄️ Guia de Banco de Dados (Entity Framework)
+
+Este projeto utiliza EF Core Migrations. Seguem os comandos principais:
+
+## **Criar uma nova Migration**
+Use este comando sempre que alterar uma Entidade no Domain.
+
+```bash
+dotnet ef migrations add NomeDaMudanca --project ../EduConnect.Infrastructure --startup-project .
+```
+
+---
+
+## **Atualizar o Banco de Dados**
+Aplica as mudanças pendentes ao SQL Server.
+
+```bash
+dotnet ef database update
+```
+
+---
+
+## **Remover última Migration**
+(Caso ainda não tenha dado update no banco)
+
+```bash
+dotnet ef migrations remove
+```
+
+---
+
+# 🧪 Testes Automatizados
+
+O sistema conta com suites de testes unitários para garantir a qualidade das regras de negócio.
+
+## **Back-end (xUnit)**
+
+```bash
+dotnet test
+```
+
+## **Front-end (Vitest)**
+
+```bash
+yarn test
+# ou
+npm run test
+```
+
+---
+
+# 📄 Funcionalidades Principais
+
+- [x] Dashboard Administrativo: Indicadores financeiros e pedagógicos em tempo real.
+- [x] Gestão de Alunos em Risco: Alertas automáticos baseados em frequência e notas.
+- [x] Loja de Uniformes: Checkout completo com geração de PIX Copia e Cola.
+- [x] Financeiro: Extrato consolidado e simulação de conciliação bancária via Webhook.
+- [x] Ranking Gamificado: Top 5 visível para alunos/pais para incentivo ao desempenho.
+- [x] Chat Real-time: Comunicação direta entre responsáveis e coordenação.
+
+---
+
+# 👨‍💻 Autor
+
+Carlos Henrique Nunes  
+Trainee Digital - TIVIT
 
 ---
